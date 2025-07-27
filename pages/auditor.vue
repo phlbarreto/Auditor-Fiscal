@@ -208,6 +208,7 @@
     });
   };
 
+  TODO: 'função nao funcionando 100%'
   const auditar = async () => {
     const resultadoComparacao = compararNcm(
       itemsAnexo1.value,
@@ -232,11 +233,11 @@
     produtosCorrigidos.value.forEach((item) => {
       let row = [];
       row.push(
-        { type: Number, value: item.cod },
-        { type: Number || String, value: item.ncm },
-        { type: String, value: item.cst },
-        { type: String, value: item.cso },
-        { type: String, value: item.cfop }
+        { type: Number, value: Number(item.cod || 0) },
+        { type: String, value: String(item.ncm || "") },
+        { type: String, value: String(item.cst || "") },
+        { type: String, value: String(item.cso || "") },
+        { type: String, value: String(item.cfop || "") }
       );
       rows.push(row);
     });

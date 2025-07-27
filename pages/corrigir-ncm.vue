@@ -208,6 +208,7 @@
       if (!produto.ncm) {
         produto.origemNcm = "Sem correspondência com confiança mínima";
       }
+      produto.origemNcm = "Sem correspondência com confiança mínima";
       return produto;
     }
 
