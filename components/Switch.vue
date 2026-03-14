@@ -2,8 +2,7 @@
   <v-switch
     v-model="switchState"
     :label="`${title}: ${switchState ? trueValue : falseValue}`"
-    hide-details
-    inset></v-switch>
+    hide-details></v-switch>
 </template>
 <script setup>
   defineProps({
