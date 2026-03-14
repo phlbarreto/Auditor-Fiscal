@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-xs class="bg-neutral-300 pa-16">
+  <v-container fluid grid-list-xs class="pa-16 h-screen">
     <v-card color="">
       <v-card-title primary-title>
         Auditor Fiscal - Sistema de Correção de Tributação
@@ -15,20 +15,42 @@
       </v-card-item>
       <div class="pa-4 text-center">
         <v-btn
+          v-for="button in routes"
+          :key="button.name"
           class="mx-4"
-          href="/auditor"
-          color="primary"
-          appendIcon="mdi-arrow-top-right-thick"
-          >Auditor - ICMS</v-btn
-        >
-        <v-btn
-          href="/corrigir-ncm"
-          color="primary"
-          appendIcon="mdi-arrow-top-right-thick"
-          >Corrigir NCM</v-btn
+          @click="goTo(button.link)"
+          :color="button.color"
+          :appendIcon="button.icon"
+          >{{ button.name }}</v-btn
         >
       </div>
     </v-card>
   </v-container>
 </template>
-<script setup></script>
+<script setup lang="ts">
+  const router = useRouter();
+  const goTo = (link: string) => {
+    router.push(link);
+  };
+
+  const routes = [
+    {
+      name: "Corrigir ICMS",
+      link: "/corrigir-icms",
+      color: "primary",
+      icon: "mdi-arrow-top-right-thick",
+    },
+    {
+      name: "Corrigir NCM",
+      link: "/corrigir-ncm",
+      color: "primary",
+      icon: "mdi-arrow-top-right-thick",
+    },
+    {
+      name: "Importar XML",
+      link: "/xml",
+      color: "primary",
+      icon: "mdi-arrow-top-right-thick",
+    },
+  ];
+</script>
