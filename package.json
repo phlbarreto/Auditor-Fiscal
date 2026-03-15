@@ -1,19 +1,21 @@
 {
   "name": "nuxt-app",
   "private": true,
-  "type": "module",
   "scripts": {
     "build": "nuxt build",
     "dev": "nuxt dev",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
-    "postinstall": "nuxt prepare"
+    "postinstall": "nuxt prepare",
+    "migrations:create": "node-pg-migrate -m infra/migrations create",
+    "migrations:up": "node-pg-migrate -m infra/migrations --envPath .env up"
   },
   "dependencies": {
     "@nuxtjs/tailwindcss": "6.12.2",
     "@pinia/nuxt": "0.11.0",
     "bcrypt": "5.1.1",
     "fast-xml-parser": "5.5.1",
+    "node-pg-migrate": "8.0.4",
     "nuxt": "3.17.3",
     "pg": "8.13.1",
     "pinia": "3.0.2",
