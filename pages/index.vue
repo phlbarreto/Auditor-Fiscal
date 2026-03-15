@@ -36,19 +36,19 @@
   const routes = [
     {
       name: "Corrigir ICMS",
-      link: "/corrigir-icms",
+      link: ROUTES.app.icms,
       color: "primary",
       icon: "mdi-arrow-top-right-thick",
     },
     {
       name: "Corrigir NCM",
-      link: "/corrigir-ncm",
+      link: ROUTES.app.ncm,
       color: "primary",
       icon: "mdi-arrow-top-right-thick",
     },
     {
       name: "Importar XML",
-      link: "/xml",
+      link: ROUTES.app.xml,
       color: "primary",
       icon: "mdi-arrow-top-right-thick",
     },

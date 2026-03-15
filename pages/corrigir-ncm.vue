@@ -86,7 +86,9 @@
 </template>
 
 <script setup lang="ts">
-  import FileInput from "~/components/FileInput.vue";
+  definePageMeta({
+    middleware: "auth",
+  });
   import type { BaseNcm, ProdutoCorrigidoNcm } from "~/interface/produto";
   const { currentTime } = useCurrentTime();
   const { $toast } = useNuxtApp();

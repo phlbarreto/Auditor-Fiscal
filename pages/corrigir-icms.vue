@@ -139,6 +139,9 @@
 </template>
 
 <script setup lang="ts">
+  definePageMeta({
+    middleware: "auth",
+  });
   import type { Produto, ProdutoCorrigido } from "~/interface/produto";
 
   const { currentTime } = useCurrentTime();

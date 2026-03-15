@@ -1,35 +1,68 @@
 <template>
-  <v-form>
-    <v-container fluid>
-      <v-row>
-        <v-col cols="6" sm="6">
-          <v-text-field
-            append-icon="mdi-account"
-            type="text"
-            class="input-group--focused"
-            hint="At least 8 characters"
-            label="Visible"
-            name="input-10-2"
-            @click:append="show2 = !show2"></v-text-field>
-        </v-col>
-      </v-row>
+  <v-container fluid class="h-screen">
+    <v-form validate-on="input lazy" ref="form" @submit.prevent>
+      <div class="w-50 mx-auto">
+        <v-card class="pa-4">
+          <v-card-title class="text-center my-4">Login</v-card-title>
+          <v-card-item>
+            <TextInput
+              :rules="[rules.email, rules.required]"
+              class="mt-2"
+              label="Email"
+              hint="Digite seu email"
+              v-model="email" />
 
-      <v-row>
-        <v-col cols="6" sm="6">
-          <v-text-field
-            :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
-            v-model="password"
-            :type="showPassword ? 'text' : 'password'"
-            hint="digite pelo menos 8 caracteres"
-            label="Senha"
-            counter
-            @click:append="showPassword = !showPassword"></v-text-field>
-        </v-col>
-      </v-row>
-    </v-container>
-  </v-form>
+            <TextInput
+              :rules="[rules.required]"
+              class="mt-2"
+              :icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
+              v-model="password"
+              :type="showPassword ? 'text' : 'password'"
+              hint=""
+              label="Senha"
+              counter
+              @click:append="showPassword = !showPassword" />
+          </v-card-item>
+          <v-card-item>
+            <v-btn :loading="loading" @click="acessar()" block color="primary"
+              >entrar</v-btn
+            >
+          </v-card-item>
+        </v-card>
+      </div>
+    </v-form>
+  </v-container>
 </template>
-<script setup>
+<script setup lang="ts">
+  definePageMeta({
+    layout: "public",
+  });
+
+  const { $toast } = useNuxtApp();
+  const { login } = useLogin();
+  const mainStore = useMainStore();
+  const { loading } = storeToRefs(mainStore);
+
   const showPassword = ref(false);
   const password = ref("");
+  const email = ref("");
+  const form = ref<any>();
+
+  const rules = {
+    required: (v: string) => !!v || "Campo obrigatório!",
+    email: (v: string) =>
+      /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) ||
+      "Digite um e-mail válido (ex: seu-nome@email.com)",
+  };
+
+  const acessar = async () => {
+    const { valid, errors } = await form.value.validate();
+    if (!valid) {
+      for (const erro of errors) {
+        $toast.error(erro.errorMessages[0]);
+      }
+      return;
+    }
+    await login(email.value, password.value);
+  };
 </script>

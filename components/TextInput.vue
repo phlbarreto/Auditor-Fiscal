@@ -5,9 +5,9 @@
     class="input-group--focused"
     :hint="hint"
     :label="label"
-    name="input-10-2" 
+    :name="label"
     variant="outlined"
-    density="compact"/>
+    density="compact" />
 </template>
 <script setup lang="ts">
   defineProps({
