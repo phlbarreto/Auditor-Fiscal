@@ -1,39 +1,70 @@
 <template>
   <v-container fluid grid-list-xs class="pa-16 h-screen">
-    <v-card color="">
-      <v-card-title primary-title>
-        Auditor Fiscal - Sistema de Correção de Tributação
-      </v-card-title>
-      <v-card-item>
+    <v-card class="text-center pa-4">
+      <v-card-title primary-title> Auditor Fiscal </v-card-title>
+      <v-card-text>
         <p>
-          Bem-vindo ao Auditor Fiscal, uma ferramenta desenvolvida para ajudar
-          empresas a corrigir a tributação dos produtos de maneira fácil e
-          eficiente. Este sistema realiza uma comparação inteligente entre dois
-          arquivos Excel fornecidos e gera um terceiro arquivo atualizado,
-          destacando as correções necessárias de tributação.
+          Simplifique a correção da sua base tributária. Compare arquivos,
+          identifique erros e gere resultados prontos para o uso em poucos
+          cliques.
         </p>
+      </v-card-text>
+      <v-card-item class="mb-8">
+        <div class="pa-4 text-center" v-if="userId">
+          <v-card-text class="mb-4">
+            O sistema processa e compara seus arquivos Excel, entregando uma
+            exportação consolidada e corrigida.*
+            <p class="text-body-2 text-gray-500">
+              *O resultado depende da qualidade e padronização dos dados
+              fornecidos.
+            </p>
+          </v-card-text>
+          <v-btn
+            v-for="button in routesFiscal"
+            :key="button.name"
+            class="mx-4"
+            @click="goTo(button.link)"
+            :color="button.color"
+            :appendIcon="button.icon"
+            size="small"
+            >{{ button.name }}</v-btn
+          >
+        </div>
       </v-card-item>
-      <div class="pa-4 text-center">
-        <v-btn
-          v-for="button in routes"
-          :key="button.name"
-          class="mx-4"
-          @click="goTo(button.link)"
-          :color="button.color"
-          :appendIcon="button.icon"
-          >{{ button.name }}</v-btn
-        >
-      </div>
+
+      <v-card-item>
+        <div class="text-h5">Automação para o Siafw</div>
+        <v-card-text> Cadastros e Atualização da base em lote </v-card-text>
+        <div>
+          <v-btn
+            v-for="button in routesSiaf"
+            :key="button.name"
+            class="mx-4"
+            @click="goTo(button.link)"
+            :color="button.color"
+            :appendIcon="button.icon"
+            size="small"
+            >{{ button.name }}</v-btn
+          >
+        </div>
+      </v-card-item>
     </v-card>
   </v-container>
 </template>
 <script setup lang="ts">
+  const userStore = useUserStore();
+  const { user } = storeToRefs(userStore);
+
+  const userId = computed(
+    () => user.value?.id === "7caa926b-2149-429d-af25-83fc67e947dd",
+  );
+
   const router = useRouter();
   const goTo = (link: string) => {
     router.push(link);
   };
 
-  const routes = [
+  const routesFiscal = [
     {
       name: "Corrigir ICMS",
       link: ROUTES.app.icms,
@@ -51,6 +82,21 @@
       link: ROUTES.app.xml,
       color: "primary",
       icon: "mdi-arrow-top-right-thick",
+    },
+  ];
+
+  const routesSiaf = [
+    {
+      name: "atualizar produtos",
+      link: ROUTES.app.atualizarProdutos,
+      color: "primary",
+      icon: "mdi-sync",
+    },
+    {
+      name: "cadastrar produtos",
+      link: ROUTES.app.cadastrarProdutos,
+      color: "primary",
+      icon: "mdi-plus",
     },
   ];
 </script>

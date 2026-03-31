@@ -21,7 +21,8 @@
               hint=""
               label="Senha"
               counter
-              @click:append="showPassword = !showPassword" />
+              @click:append="showPassword = !showPassword"
+              @keydown.enter="acessar()" />
           </v-card-item>
           <v-card-item>
             <v-btn :loading="loading" @click="acessar()" block color="primary"
