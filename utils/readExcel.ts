@@ -28,9 +28,20 @@ export const readAnexoSefaz = async (file: any, columns: Array<string>) => {
   return { excelData, ncmsTratados, totalNcms };
 };
 
-export const readExcel = async (file: any, columns: Array<string>) => {
+export const readExcel = async (file: any, columns: string[] = []) => {
   const rows = await readXlsxFile(file);
 
+  if (columns.length === 0) {
+    const colunas = rows[0].map((col) => {
+      if (!isNaN(Number(col))) {
+        throw new Error("Colunas obrigatórias");
+      }
+      return col.toString();
+    });
+    if (colunas.length > 1) {
+      columns.push(...colunas);
+    }
+  }
   const excelData = rows.map((row) => {
     return columns.reduce((acc, colName, index) => {
       acc[colName] = row[index];
