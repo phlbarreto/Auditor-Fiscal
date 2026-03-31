@@ -34,4 +34,6 @@ export const protectedRoutes = [
   "/corrigir-icms",
   "/corrigir-ncm",
   "/importar-xml",
+  "/produtos/cadastrar",
+  "/produtos/atualizar",
 ];
