@@ -81,7 +81,7 @@
     middleware: "auth",
   });
 
-  const { apiTest } = useApiFDB();
+  const { apiTest, createProdutos } = useApiFDB();
 
   const { $toast } = useNuxtApp();
   const baseExcelFile = ref<File>();
@@ -123,19 +123,8 @@
 
     loading.value = true;
     try {
-      const response = await $fetch(ROUTES.api.produtos, {
-        method: "POST",
-        body: {
-          produtos,
-          colunas,
-          deletar: checkboxDeletar.value,
-        },
-      });
-      $toast.success(response);
+      await createProdutos(produtos, colunas, checkboxDeletar.value);
     } catch (error: any) {
-      const cause = error.data.data.message;
-
-      $toast.error(`Erro ao inserir produtos: ${cause}`);
     } finally {
       loading.value = false;
     }

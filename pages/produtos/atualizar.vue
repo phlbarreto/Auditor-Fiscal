@@ -57,7 +57,7 @@
     middleware: "auth",
   });
 
-  const { apiTest } = useApiFDB();
+  const { apiTest, updateProdutos } = useApiFDB();
 
   const { $toast } = useNuxtApp();
   const baseExcelFile = ref<File>();
@@ -83,18 +83,8 @@
 
     loading.value = true;
     try {
-      const response = await $fetch(ROUTES.api.produtos, {
-        method: "PATCH",
-        body: {
-          produtos,
-          colunas,
-        },
-      });
-      $toast.success(response);
-    } catch (error: any) {
-      const cause = error.data.data.message;
-
-      $toast.error(`Erro ao atualizar produtos: ${cause}`);
+      await updateProdutos(produtos, colunas);
+    } catch (e) {
     } finally {
       loading.value = false;
     }
