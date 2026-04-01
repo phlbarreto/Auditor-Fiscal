@@ -12,7 +12,7 @@ import user from "~/models/user";
 export const create = async (event: H3Event) => {
   try {
     const body = await readBody(event);
-    const { name, email, password } = body;
+    const { name, email, password } = JSON.parse(body);
 
     const invalidParams = !name || !email || !password;
 
