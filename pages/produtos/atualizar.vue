@@ -26,7 +26,13 @@
               >Colunas do banco de dados informadas no arquivo</span
             >
             <p v-if="colunasBanco.length" class="text-left mt-2 ml-6">
-              {{ colunasBanco.join(", ") }}
+              <span
+                :class="{
+                  'text-body-2': colunasBanco.length > 9,
+                  'text-xs': colunasBanco.length > 12,
+                }">
+                {{ colunasBanco.join(", ") }}
+              </span>
             </p>
           </div>
 
@@ -91,18 +97,36 @@
   };
 
   const onChange = async () => {
-    $toast.success(`Base ${baseExcelFile.value?.name} carregada!`);
     const produtos = await readExcel(baseExcelFile.value);
-    colunasBanco.value = Object.keys(produtos[0]);
-    colunasBanco.value.forEach((col) => {
+    const colunas = Object.keys(produtos[0]).map((col) => col.toUpperCase());
+
+    let error = false;
+
+    colunas.forEach((col) => {
       if (!isNaN(Number(col))) {
         $toast.error(
           "Colunas do banco de dados deve ser informada na primeira linha do excel",
         );
+        error = true;
+      }
+
+      if (!colunasProdutos.includes(col.toUpperCase())) {
+        $toast.error(
+          `Coluna ${col} inexistente no banco de dados, Verifique e importe novamente!`,
+        );
+        error = true;
       }
     });
+
+    if (error) {
+      baseExcelFile.value = undefined;
+      return;
+    }
+
+    colunasBanco.value = colunas;
     produtos.splice(0, 1);
 
     baseProdutos.value = produtos;
+    $toast.success(`Base ${baseExcelFile.value?.name} carregada!`);
   };
 </script>
