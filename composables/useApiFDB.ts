@@ -52,15 +52,23 @@ export const useApiFDB = () => {
       const blocos = chunkArray(produtos, 200);
 
       let produtosAtualizados = 0;
+      let deletarProdutos = deletar;
       for (const bloco of blocos) {
         const response = await $fetch<{ sucesso: string; total: number }>(
           ROUTES.apiFDB.atualizarProdutos,
           {
             method: "POST",
-            body: { produtos: bloco.filter((b) => b), colunas, deletar },
+            body: {
+              produtos: bloco.filter((b) => b),
+              colunas,
+              deletar: deletarProdutos,
+            },
           },
         );
         produtosAtualizados += response.total;
+        if (deletar) {
+          deletarProdutos = false;
+        }
       }
       $toast.success(`Total de ${produtosAtualizados} produtos cadastrados!`);
     } catch (error: any) {
