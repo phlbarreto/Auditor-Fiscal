@@ -13,8 +13,13 @@ export const useApiFDB = () => {
       }
       exibeToastSucesso ? $toast.success(response.message) : "";
       return true;
-    } catch (error) {
-      console.log(error);
+    } catch (error: any) {
+      if (error.name === "FetchError") {
+        $toast.error("Sem comunicação com a API");
+        return false;
+      }
+      console.log("Erro desconhecido: ", error);
+      return false;
     }
   };
 
