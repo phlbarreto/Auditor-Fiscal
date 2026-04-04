@@ -35,8 +35,8 @@ export const protectedRoutes = [
   "/corrigir-icms",
   "/corrigir-ncm",
   "/importar-xml",
-  "/recurso/cadastrar",
-  "/recurso/atualizar",
+  "/siafw/cadastrar",
+  "/siafw/atualizar",
 ];
 
 export const colunasProdutos = [
