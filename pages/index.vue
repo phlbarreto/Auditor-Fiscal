@@ -34,7 +34,9 @@
 
       <v-card-item>
         <div class="text-h5">Automação para o Siafw</div>
-        <v-card-text> Cadastros e Atualização da base em lote </v-card-text>
+        <v-card-text>
+          Cadastros e atualizações do banco de dados em lote</v-card-text
+        >
         <div>
           <v-btn
             v-for="button in routesSiaf"
@@ -87,14 +89,14 @@
 
   const routesSiaf = [
     {
-      name: "atualizar produtos",
-      link: ROUTES.app.atualizarProdutos,
+      name: "atualizar",
+      link: ROUTES.app.atualizarRecurso,
       color: "primary",
       icon: "mdi-sync",
     },
     {
-      name: "cadastrar produtos",
-      link: ROUTES.app.cadastrarProdutos,
+      name: "cadastrar",
+      link: ROUTES.app.inserirRecurso,
       color: "primary",
       icon: "mdi-plus",
     },

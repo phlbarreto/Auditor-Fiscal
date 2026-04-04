@@ -2,18 +2,21 @@
   <div class="w-75 mx-auto mt-3">
     <v-card class="text-center position-relative">
       <BtnInfo />
-      <v-card-title>Atualização de produtos</v-card-title>
+      <v-card-title>Atualização em lote</v-card-title>
       <v-card-item>
         <p>
-          Suba uma base de produtos em excel e informe as colunas para
-          atualização.
-        </p>
-        <p>
-          A primeira linha do excel deve ter o mesmo nome das colunas no banco
-          de dados (PRO_COD, PRO_CF...)
+          Suba uma base em excel e informe na primeira linha a(s) coluna(s) que
+          será(ão) atualizada(s).
         </p>
 
         <div class="mx-8 my-4">
+          <Select
+            v-model="tabelaSelecionada"
+            :items="tabelasFdb"
+            label="Selecione a tabela alvo" />
+        </div>
+
+        <div class="mx-8 my-4" v-if="tabelaSelecionada">
           <FileInput
             v-model="baseExcelFile"
             @change="onChange"
@@ -47,11 +50,11 @@
           >
         </div>
       </v-card-item>
-      <v-card-item v-if="baseProdutos.length">
+      <v-card-item v-if="payload.length">
         <h3 class="text-h5">Informações</h3>
         <p>
-          <span class="text-h6">{{ baseProdutos.length }} </span> linhas
-          processadas do excel
+          <span class="text-h6">{{ payload.length }} </span> linhas processadas
+          do excel
         </p>
         <p>{{ colunasBanco.length }} coluna{{ plural }} do banco de dados</p>
       </v-card-item>
@@ -63,33 +66,35 @@
     middleware: "auth",
   });
 
-  const { apiTest, updateProdutos } = useApiFDB();
-
   const { $toast } = useNuxtApp();
+  const { apiTest, updateRecurso } = useApiFDB();
+  const { getContexto, invalidColumns, tabelaSelecionada } = useRecurso();
+
   const baseExcelFile = ref<File>();
   const colunasBanco = ref<string[]>([]);
-  const baseProdutos = ref<any[]>([]);
+  const payload = ref<any[]>([]);
   const loading = ref(false);
 
   const plural = computed(() => (colunasBanco.value.length > 1 ? "s" : ""));
 
-  const onClick = async () => {
-    if (!colunasBanco.value.length || !baseProdutos.value.length) {
-      return $toast.error("É necessário informar uma base em excel");
-    }
-    const produtos = baseProdutos.value;
-    const colunas = colunasBanco.value;
+  const contexto = getContexto();
 
-    if (!colunasBanco.value.length) {
-      $toast.error("Informe as colunas na primeira linha do Excel!");
-      return;
-    }
+  const onClick = async () => {
+    if (!validarCampos()) return;
+
+    const dados = payload.value;
+    const colunas = colunasBanco.value;
 
     if (!(await apiTest(false))) return;
 
     loading.value = true;
     try {
-      await updateProdutos(produtos, colunas);
+      await updateRecurso(
+        dados,
+        colunas,
+        contexto.value.tabela,
+        tabelaSelecionada.value as string,
+      );
     } catch (e) {
     } finally {
       loading.value = false;
@@ -97,36 +102,39 @@
   };
 
   const onChange = async () => {
-    const produtos = await readExcel(baseExcelFile.value);
-    const colunas = Object.keys(produtos[0]).map((col) => col.toUpperCase());
+    const dadosArquivo = await readExcel(baseExcelFile.value);
+    const colunas = Object.keys(dadosArquivo[0]).map((col) =>
+      col.toUpperCase(),
+    );
 
-    let error = false;
-
-    colunas.forEach((col) => {
-      if (!isNaN(Number(col))) {
-        $toast.error(
-          "Colunas do banco de dados deve ser informada na primeira linha do excel",
-        );
-        error = true;
-      }
-
-      if (!colunasProdutos.includes(col.toUpperCase())) {
-        $toast.error(
-          `Coluna ${col} inexistente no banco de dados, Verifique e importe novamente!`,
-        );
-        error = true;
-      }
-    });
-
-    if (error) {
+    if (invalidColumns(colunas, contexto)) {
       baseExcelFile.value = undefined;
       return;
     }
 
     colunasBanco.value = colunas;
-    produtos.splice(0, 1);
+    dadosArquivo.splice(0, 1);
 
-    baseProdutos.value = produtos;
+    payload.value = dadosArquivo;
     $toast.success(`Base ${baseExcelFile.value?.name} carregada!`);
+  };
+
+  const validarCampos = () => {
+    if (!colunasBanco.value.length || !payload.value.length) {
+      $toast.error("É necessário informar uma base em excel");
+      return false;
+    }
+
+    if (!tabelaSelecionada.value) {
+      $toast.error("É necessário informar a tabela alvo!");
+      return false;
+    }
+
+    if (!colunasBanco.value.length) {
+      $toast.error("Informe as colunas na primeira linha do Excel!");
+      return false;
+    }
+
+    return true;
   };
 </script>

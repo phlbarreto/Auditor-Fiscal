@@ -21,12 +21,13 @@ export const ROUTES = {
     icms: "/corrigir-icms",
     ncm: "/corrigir-ncm",
     xml: "/importar-xml",
-    atualizarProdutos: "/produtos/atualizar",
-    cadastrarProdutos: "/produtos/cadastrar",
+    atualizarRecurso: "/recurso/atualizar",
+    inserirRecurso: "/recurso/cadastrar",
   },
   apiFDB: {
     status: `${apiFDBUrl}/status`,
-    atualizarProdutos: `${apiFDBUrl}/produtos`,
+    atualizarRecurso: `${apiFDBUrl}/atualizar`,
+    inserirRecurso: `${apiFDBUrl}/inserir`,
   },
 };
 
@@ -34,8 +35,8 @@ export const protectedRoutes = [
   "/corrigir-icms",
   "/corrigir-ncm",
   "/importar-xml",
-  "/produtos/cadastrar",
-  "/produtos/atualizar",
+  "/recurso/cadastrar",
+  "/recurso/atualizar",
 ];
 
 export const colunasProdutos = [
@@ -138,3 +139,22 @@ export const colunasProdutos = [
   "PRO_SAI_REF_IBSMUN_RED",
   "PRO_SAI_REF_CBS_RED",
 ];
+
+export const colunasClientes = [
+  "CLI_COD",
+  "CLI_NOME",
+  "CLI_END",
+  "CLI_BAI",
+  "CLI_CEP",
+  "CLI_CID",
+  "CLI_EST",
+  "CLI_FONE",
+  "CLI_TIPO",
+  "CLI_CGC",
+  "CLI_FANT",
+  "CLI_SITE",
+];
+
+export const colunasFornecedores = ["FOR_COD", "FOR_NOME"];
+
+export const tabelasFdb = ["produtos", "clientes", "fornecedores"];

@@ -1,28 +1,32 @@
 <template>
   <div class="w-75 mx-auto mt-3">
     <DialogConfirmCancel
-      v-model="dialogDeletarProdutos"
+      v-model="dialogDeletarRecurso"
       title="Atenção!"
       text-confirm="continuar"
       text-cancel="cancelar"
       @confirm="confirmDeletar"
-      @cancel="dialogDeletarProdutos = false">
-      Todos os produtos existentes no banco de dados do Siafw serão deletados,
-      essa ação não tem volta. Deseja continuar?
+      @cancel="dialogDeletarRecurso = false">
+      Todos os {{ tabelaSelecionada }} existentes no banco de dados do Siafw
+      serão deletados, não será possível desfazer esta ação. Deseja continuar?
     </DialogConfirmCancel>
     <v-card class="text-center position-relative">
       <BtnInfo />
-      <v-card-title>Cadastro de produtos</v-card-title>
+      <v-card-title>Cadastro em lote</v-card-title>
       <v-card-item>
         <p>
-          Suba uma base de produtos em excel e informe as colunas para cadastro.
-        </p>
-        <p>
-          A primeira linha do excel deve ter o mesmo nome das colunas no banco
-          de dados (PRO_COD, PRO_CF...)
+          Suba uma base em excel e informe na primeira linha a(s) coluna(s) que
+          será(ão) cadastrada(s).
         </p>
 
         <div class="mx-8 my-4">
+          <Select
+            v-model="tabelaSelecionada"
+            :items="tabelasFdb"
+            label="Selecione a tabela alvo" />
+        </div>
+
+        <div class="mx-8 my-4" v-if="tabelaSelecionada">
           <FileInput
             v-model="baseExcelFile"
             @change="onChange"
@@ -46,18 +50,19 @@
           </div>
 
           <div
-            v-if="colunasBanco.includes('PRO_COD')"
+            v-if="colunasBanco.includes(contexto.key)"
             class="my-4 text-gray-600">
             <p>
               Certifique que os codigos enviados não existam no banco de dados
-              ou então marque o checkbox para deletar os produtos existentes.
+              ou então marque o checkbox para deletar os
+              {{ tabelaSelecionada }} existentes.
             </p>
           </div>
 
           <div>
             <v-checkbox
               v-model="checkboxDeletar"
-              :label="`Deletar produtos existentes? ${checkboxDeletar ? 'Sim' : 'Não'}`"></v-checkbox>
+              :label="`Deletar ${tabelaSelecionada} existentes? ${checkboxDeletar ? 'Sim' : 'Não'}`"></v-checkbox>
           </div>
 
           <v-btn
@@ -71,11 +76,11 @@
           >
         </div>
       </v-card-item>
-      <v-card-item v-if="baseProdutos.length">
+      <v-card-item v-if="payload.length">
         <h3 class="text-h5">Informações</h3>
         <p>
-          <span class="text-h6">{{ baseProdutos.length }} </span> linhas
-          processadas do excel
+          <span class="text-h6">{{ payload.length }} </span> linhas processadas
+          do excel
         </p>
         <p>{{ colunasBanco.length }} coluna{{ plural }} do banco de dados</p>
       </v-card-item>
@@ -87,22 +92,26 @@
     middleware: "auth",
   });
 
-  const { apiTest, createProdutos } = useApiFDB();
-
   const { $toast } = useNuxtApp();
+  const { apiTest, createRecurso } = useApiFDB();
+  const { getContexto, invalidColumns, tabelaSelecionada } = useRecurso();
+
   const baseExcelFile = ref<File>();
   const colunasBanco = ref<string[]>([]);
-  const baseProdutos = ref<any[]>([]);
+  const payload = ref<any[]>([]);
   const loading = ref(false);
   const checkboxDeletar = ref(false);
 
-  const dialogDeletarProdutos = ref(false);
+  const dialogDeletarRecurso = ref(false);
 
   const plural = computed(() => (colunasBanco.value.length > 1 ? "s" : ""));
 
+  const contexto = getContexto();
+
   const onClick = async () => {
     if (checkboxDeletar.value) {
-      dialogDeletarProdutos.value = true;
+      if (!validarCampos()) return;
+      dialogDeletarRecurso.value = true;
     } else {
       await processarCadastro();
     }
@@ -110,26 +119,26 @@
 
   const confirmDeletar = async () => {
     await processarCadastro();
-    dialogDeletarProdutos.value = false;
+    dialogDeletarRecurso.value = false;
   };
 
   const processarCadastro = async () => {
-    if (!colunasBanco.value.length || !baseProdutos.value.length) {
-      return $toast.error("É necessário informar uma base em excel");
-    }
-    const produtos = baseProdutos.value;
-    const colunas = colunasBanco.value;
+    if (!validarCampos()) return;
 
-    if (!colunasBanco.value.length) {
-      $toast.error("Informe as colunas na primeira linha do Excel!");
-      return;
-    }
+    const dados = payload.value;
+    const colunas = colunasBanco.value;
 
     if (!(await apiTest(false))) return;
 
     loading.value = true;
     try {
-      await createProdutos(produtos, colunas, checkboxDeletar.value);
+      await createRecurso(
+        dados,
+        colunas,
+        checkboxDeletar.value,
+        contexto.value.tabela,
+        tabelaSelecionada.value as string,
+      );
     } catch (error: any) {
     } finally {
       loading.value = false;
@@ -137,36 +146,39 @@
   };
 
   const onChange = async () => {
-    const produtos = await readExcel(baseExcelFile.value);
-    const colunas = Object.keys(produtos[0]).map((col) => col.toUpperCase());
+    const dadosArquivo = await readExcel(baseExcelFile.value);
+    const colunas = Object.keys(dadosArquivo[0]).map((col) =>
+      col.toUpperCase(),
+    );
 
-    let error = false;
-
-    colunas.forEach((col) => {
-      if (!isNaN(Number(col))) {
-        $toast.error(
-          "Colunas do banco de dados deve ser informada na primeira linha do excel",
-        );
-        error = true;
-      }
-
-      if (!colunasProdutos.includes(col.toUpperCase())) {
-        $toast.error(
-          `Coluna ${col} inexistente no banco de dados, Verifique e importe novamente!`,
-        );
-        error = true;
-      }
-    });
-
-    if (error) {
+    if (invalidColumns(colunas, contexto)) {
       baseExcelFile.value = undefined;
       return;
     }
 
     colunasBanco.value = colunas;
 
-    produtos.splice(0, 1);
-    baseProdutos.value = produtos;
+    dadosArquivo.splice(0, 1);
+    payload.value = dadosArquivo;
     $toast.success(`Base ${baseExcelFile.value?.name} carregada!`);
+  };
+
+  const validarCampos = () => {
+    if (!colunasBanco.value.length || !payload.value.length) {
+      $toast.error("É necessário informar uma base em excel");
+      return false;
+    }
+
+    if (!tabelaSelecionada.value) {
+      $toast.error("É necessário informar a tabela alvo!");
+      return false;
+    }
+
+    if (!colunasBanco.value.length) {
+      $toast.error("Informe as colunas na primeira linha do Excel!");
+      return false;
+    }
+
+    return true;
   };
 </script>
