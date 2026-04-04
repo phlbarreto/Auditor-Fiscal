@@ -22,10 +22,10 @@
               label="Senha"
               counter
               @click:append="showPassword = !showPassword"
-              @keydown.enter="acessar()" />
+              @keyup.enter="acessar" />
           </v-card-item>
           <v-card-item>
-            <v-btn :loading="loading" @click="acessar()" block color="primary"
+            <v-btn :loading="loading" @click="acessar" block color="primary"
               >entrar</v-btn
             >
           </v-card-item>
@@ -43,6 +43,8 @@
   const { login } = useLogin();
   const mainStore = useMainStore();
   const { loading } = storeToRefs(mainStore);
+  const userStore = useUserStore();
+  const { user } = storeToRefs(userStore);
 
   const showPassword = ref(false);
   const password = ref("");
@@ -66,4 +68,10 @@
     }
     await login(email.value, password.value);
   };
+
+  onMounted(() => {
+    if (user.value) {
+      useRouter().push("/");
+    }
+  });
 </script>
