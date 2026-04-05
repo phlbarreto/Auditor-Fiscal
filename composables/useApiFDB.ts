@@ -1,25 +1,42 @@
 export const useApiFDB = () => {
   const { $toast } = useNuxtApp();
 
+  const mainStore = useMainStore();
+  const { loading, infoApiFdbDialog } = storeToRefs(mainStore);
+
   const apiTest = async (exibeToastSucesso = true) => {
     try {
-      const response = await $fetch<{ status: boolean; message: string }>(
-        ROUTES.apiFDB.status,
-      );
+      loading.value = true;
+      const response = await $fetch<{
+        status: boolean;
+        message: string;
+        version: string;
+      }>(ROUTES.apiFDB.status);
 
       if (!response.status) {
         $toast.error(response.message);
         return false;
       }
+
+      if (!response.version || response.version !== apiFdbCurrentVersion) {
+        $toast.warning(
+          "API Firebird desatualizada.\nEntre em contato com o administrador do sistema.",
+        );
+        return false;
+      }
+
       exibeToastSucesso ? $toast.success(response.message) : "";
       return true;
     } catch (error: any) {
       if (error.name === "FetchError") {
         $toast.error("Sem comunicação com a API");
+        infoApiFdbDialog.value = true;
         return false;
       }
       console.log("Erro desconhecido: ", error);
       return false;
+    } finally {
+      loading.value = false;
     }
   };
 
@@ -29,6 +46,8 @@ export const useApiFDB = () => {
     recurso: string,
     alvo: string,
   ) => {
+    loading.value = true;
+
     const blocos = chunkArray(payload, 200);
     try {
       let totalAtualizado = 0;
@@ -45,6 +64,8 @@ export const useApiFDB = () => {
       $toast.success(`Total de ${totalAtualizado} ${alvo} atualizados!`);
     } catch (error: any) {
       $toast.error(error.data.message);
+    } finally {
+      loading.value = false;
     }
   };
 
@@ -56,6 +77,7 @@ export const useApiFDB = () => {
     alvo: string,
   ) => {
     try {
+      loading.value = true;
       const blocos = chunkArray(payload, 200);
 
       let totalAtualizado = 0;
@@ -80,6 +102,8 @@ export const useApiFDB = () => {
       $toast.success(`Total de ${totalAtualizado} ${alvo} cadastrados!`);
     } catch (error: any) {
       $toast.error(error.data.message);
+    } finally {
+      loading.value = false;
     }
   };
 

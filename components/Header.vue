@@ -7,7 +7,9 @@
       :ripple="false">
       <span class="mx-2 font-bold">Auditor Fiscal</span>
     </v-btn>
-    <div class="mr-4">
+
+    <div class="mr-4 flex">
+      <SpinnerDot class="mr-4" v-if="loading" />
       <div v-if="user">
         <v-menu open-on-hover>
           <template #activator="{ props }">
@@ -41,6 +43,8 @@
   const userStore = useUserStore();
   const { user } = storeToRefs(userStore);
   const { logout } = useLogin();
+  const mainStore = useMainStore();
+  const { loading } = storeToRefs(mainStore);
 
   const router = useRouter();
   const goTo = (link: string) => {
