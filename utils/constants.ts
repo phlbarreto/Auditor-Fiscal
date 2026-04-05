@@ -1,5 +1,7 @@
 export const apiBase = "/api/v1";
 const apiFDBUrl = "http://localhost:2610";
+export const apiFdbCurrentVersion = "2.0.0";
+
 export const ROUTES = {
   api: {
     createUser: `${apiBase}/users`,
@@ -21,8 +23,8 @@ export const ROUTES = {
     icms: "/corrigir-icms",
     ncm: "/corrigir-ncm",
     xml: "/importar-xml",
-    atualizarRecurso: "/recurso/atualizar",
-    inserirRecurso: "/recurso/cadastrar",
+    atualizarRecurso: "/siafw/atualizar",
+    inserirRecurso: "/siafw/cadastrar",
   },
   apiFDB: {
     status: `${apiFDBUrl}/status`,

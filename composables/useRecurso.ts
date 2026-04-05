@@ -1,33 +1,9 @@
-import type { Tabela } from "~/interface/recurso";
-
 export const useRecurso = () => {
   const { $toast } = useNuxtApp();
-  const tabelaSelecionada = ref<Tabela>();
 
-  const getContexto = () => {
-    const tabela = computed(() => {
-      const options = {
-        produtos: {
-          tabela: "DSIAF006",
-          colunas: colunasProdutos,
-          key: "PRO_COD",
-        },
-        clientes: {
-          tabela: "DSIAF010",
-          colunas: colunasClientes,
-          key: "CLI_COD",
-        },
-        fornecedores: {
-          tabela: "DSIAF009",
-          colunas: colunasFornecedores,
-          key: "FOR_COD",
-        },
-      };
-
-      return options[tabelaSelecionada.value as Tabela];
-    });
-    return tabela;
-  };
+  const mainStore = useMainStore();
+  const { colunasBanco, payloadFDB, tabelaSelecionada, contexto } =
+    storeToRefs(mainStore);
 
   const invalidColumns = (colunas: string[], contexto: ComputedRef) => {
     let error = false;
@@ -50,5 +26,24 @@ export const useRecurso = () => {
     return error;
   };
 
-  return { getContexto, invalidColumns, tabelaSelecionada };
+  const validColumnsFDB = () => {
+    if (!colunasBanco.value.length || !payloadFDB.value.length) {
+      $toast.error("É necessário informar uma base em excel");
+      return false;
+    }
+
+    if (!tabelaSelecionada.value) {
+      $toast.error("É necessário informar a tabela alvo!");
+      return false;
+    }
+
+    if (!colunasBanco.value.length) {
+      $toast.error("Informe as colunas na primeira linha do Excel!");
+      return false;
+    }
+
+    return true;
+  };
+
+  return { invalidColumns, validColumnsFDB };
 };
