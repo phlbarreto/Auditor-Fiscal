@@ -2,7 +2,14 @@ export const useApiFDB = () => {
   const { $toast } = useNuxtApp();
 
   const mainStore = useMainStore();
-  const { loading, infoApiFdbDialog } = storeToRefs(mainStore);
+  const {
+    loading,
+    infoApiFdbDialog,
+    baseExcelFile,
+    colunasBanco,
+    payloadFDB,
+    apiFdbOnline,
+  } = storeToRefs(mainStore);
 
   const apiTest = async (exibeToastSucesso = true) => {
     try {
@@ -26,11 +33,13 @@ export const useApiFDB = () => {
       }
 
       exibeToastSucesso ? $toast.success(response.message) : "";
+      apiFdbOnline.value = true;
       return true;
     } catch (error: any) {
       if (error.name === "FetchError") {
         $toast.error("Sem comunicação com a API");
         infoApiFdbDialog.value = true;
+        apiFdbOnline.value = false;
         return false;
       }
       console.log("Erro desconhecido: ", error);
@@ -62,6 +71,7 @@ export const useApiFDB = () => {
         totalAtualizado += response.total;
       }
       $toast.success(`Total de ${totalAtualizado} ${alvo} atualizados!`);
+      clearData();
     } catch (error: any) {
       $toast.error(error.data.message);
     } finally {
@@ -100,12 +110,19 @@ export const useApiFDB = () => {
         }
       }
       $toast.success(`Total de ${totalAtualizado} ${alvo} cadastrados!`);
+      clearData();
     } catch (error: any) {
       $toast.error(error.data.message);
     } finally {
       loading.value = false;
     }
   };
+
+  function clearData() {
+    baseExcelFile.value = undefined;
+    colunasBanco.value = [];
+    payloadFDB.value = [];
+  }
 
   return { apiTest, updateRecurso, createRecurso };
 };

@@ -1,6 +1,6 @@
 <template>
   <v-card-item v-if="payloadFDB.length">
-    <h3 class="text-h5">Informações</h3>
+    <h3 class="text-h6">Detalhes</h3>
     <p>
       <span class="text-h6">{{ payloadFDB.length }} </span> linhas processadas
       do excel

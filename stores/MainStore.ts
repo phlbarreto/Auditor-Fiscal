@@ -4,7 +4,7 @@ import type { Tabela } from "~/interface/recurso";
 export const useMainStore = defineStore("main", () => {
   const switchState = ref(true);
   const loading = ref(false);
-  const loadingSpinner = ref(false);
+  const loadingSpinner = ref(true);
   const infoApiFdbDialog = ref(false);
   const baseExcelFile = ref<File>();
   const colunasBanco = ref<string[]>([]);
@@ -12,6 +12,7 @@ export const useMainStore = defineStore("main", () => {
   const tabelaSelecionada = ref<Tabela>();
   const dialogDeletarRecurso = ref(false);
   const checkboxDeletar = ref(false);
+  const apiFdbOnline = ref(false);
 
   const contexto = computed(() => {
     const options = {
@@ -47,5 +48,6 @@ export const useMainStore = defineStore("main", () => {
     contexto,
     dialogDeletarRecurso,
     checkboxDeletar,
+    apiFdbOnline,
   };
 });
