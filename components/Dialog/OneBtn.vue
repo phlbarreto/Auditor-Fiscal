@@ -11,6 +11,8 @@
       </v-card-text>
       <v-card-item>
         <v-btn
+          :loading="btnLoading"
+          :disabled="disabled"
           @click="onClick()"
           color="primary"
           size="small"
@@ -33,6 +35,14 @@
       default: "btnName",
     },
     btnIcon: { type: String, default: "mdi-plus" },
+    btnLoading: {
+      type: Boolean,
+      default: false,
+    },
+    disabled: {
+      type: Boolean,
+      default: false,
+    },
   });
 
   const emit = defineEmits(["onClick", "onFechar"]);

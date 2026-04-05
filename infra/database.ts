@@ -1,8 +1,10 @@
 import pg from "pg";
 const { Pool } = pg;
+import { loadEnv } from "./env";
 const postgresClient = () => {
+  const { DATABASE_URL } = loadEnv();
   const client = new Pool({
-    connectionString: process.env.DATABASE_URL,
+    connectionString: DATABASE_URL,
   });
   return {
     client,

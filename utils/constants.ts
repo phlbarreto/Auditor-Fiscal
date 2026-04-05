@@ -1,5 +1,7 @@
 export const apiBase = "/api/v1";
 const apiFDBUrl = "http://localhost:2610";
+export const apiFdbCurrentVersion = "2.0.0";
+
 export const ROUTES = {
   api: {
     createUser: `${apiBase}/users`,
@@ -21,12 +23,13 @@ export const ROUTES = {
     icms: "/corrigir-icms",
     ncm: "/corrigir-ncm",
     xml: "/importar-xml",
-    atualizarProdutos: "/produtos/atualizar",
-    cadastrarProdutos: "/produtos/cadastrar",
+    atualizarRecurso: "/siafw/atualizar",
+    inserirRecurso: "/siafw/cadastrar",
   },
   apiFDB: {
     status: `${apiFDBUrl}/status`,
-    atualizarProdutos: `${apiFDBUrl}/produtos`,
+    atualizarRecurso: `${apiFDBUrl}/atualizar`,
+    inserirRecurso: `${apiFDBUrl}/inserir`,
   },
 };
 
@@ -34,8 +37,8 @@ export const protectedRoutes = [
   "/corrigir-icms",
   "/corrigir-ncm",
   "/importar-xml",
-  "/produtos/cadastrar",
-  "/produtos/atualizar",
+  "/siafw/cadastrar",
+  "/siafw/atualizar",
 ];
 
 export const colunasProdutos = [
@@ -138,3 +141,22 @@ export const colunasProdutos = [
   "PRO_SAI_REF_IBSMUN_RED",
   "PRO_SAI_REF_CBS_RED",
 ];
+
+export const colunasClientes = [
+  "CLI_COD",
+  "CLI_NOME",
+  "CLI_END",
+  "CLI_BAI",
+  "CLI_CEP",
+  "CLI_CID",
+  "CLI_EST",
+  "CLI_FONE",
+  "CLI_TIPO",
+  "CLI_CGC",
+  "CLI_FANT",
+  "CLI_SITE",
+];
+
+export const colunasFornecedores = ["FOR_COD", "FOR_NOME"];
+
+export const tabelasFdb = ["produtos", "clientes", "fornecedores"];
