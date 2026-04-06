@@ -36,7 +36,7 @@ export const readExcel = async (file: any, columns: string[] = []) => {
       if (!isNaN(Number(col))) {
         throw new Error("Colunas obrigatórias");
       }
-      return col.toString();
+      return col.toString().toUpperCase();
     });
     if (colunas.length > 1) {
       columns.push(...colunas);
