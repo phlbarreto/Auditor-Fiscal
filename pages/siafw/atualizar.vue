@@ -22,6 +22,6 @@
   const { apiTest } = useApiFDB();
 
   onMounted(async () => {
-    apiTest();
+    await apiTest();
   });
 </script>

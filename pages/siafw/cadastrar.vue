@@ -29,6 +29,7 @@
     middleware: "auth",
   });
   const { apiTest, createRecurso } = useApiFDB();
+  const { validColumnsFDB } = useRecurso();
   const mainStore = useMainStore();
   const {
     loading,
@@ -39,7 +40,10 @@
     dialogDeletarRecurso,
     checkboxDeletar,
   } = storeToRefs(mainStore);
-  const { validColumnsFDB } = useRecurso();
+
+  onMounted(async () => {
+    await apiTest();
+  });
 
   const confirmDeletar = async () => {
     await processarCadastro();
