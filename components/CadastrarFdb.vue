@@ -3,7 +3,7 @@
     <Select
       v-model="tabelaSelecionada"
       :items="tabelasFdb"
-      label="Selecione a tabela alvo" />
+      label="Selecione o recurso" />
   </div>
 
   <div class="mx-8 my-4" v-if="tabelaSelecionada">
@@ -17,8 +17,9 @@
 
     <div v-if="colunasBanco.includes(contexto.key)" class="my-4 text-gray-600">
       <p>
-        Certifique que os codigos enviados não existam no banco de dados ou
-        então marque o checkbox para deletar os
+        Certifique que os codigos enviados não existam no banco de dados.
+        Códigos duplicados não serão aceitos. Para resolver isso, marque o
+        checkbox para deletar os
         {{ tabelaSelecionada }} existentes.
       </p>
     </div>
