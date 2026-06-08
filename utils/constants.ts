@@ -155,6 +155,8 @@ export const colunasClientes = [
   "CLI_CGC",
   "CLI_FANT",
   "CLI_SITE",
+  "CLI_NUM",
+  "CLI_CFP",
 ];
 
 export const colunasFornecedores = ["FOR_COD", "FOR_NOME"];
