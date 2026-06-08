@@ -170,7 +170,9 @@ export const colunasFornecedores = [
   "FOR_IE",
   "FOR_CEL",
   "FOR_FONE",
-  "FOR_EMAIL",
+  "FOR_MAIL",
+  "FOR_END",
+  "FOR_NUM",
 ];
 
 export const tabelasFdb = ["produtos", "clientes", "fornecedores"];
