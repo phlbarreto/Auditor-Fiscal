@@ -159,6 +159,18 @@ export const colunasClientes = [
   "CLI_CFP",
 ];
 
-export const colunasFornecedores = ["FOR_COD", "FOR_NOME"];
+export const colunasFornecedores = [
+  "FOR_COD",
+  "FOR_NOME",
+  "FOR_RAZAO",
+  "FOR_CPF",
+  "FOR_BAI",
+  "FOR_CID",
+  "FOR_EST",
+  "FOR_IE",
+  "FOR_CEL",
+  "FOR_FONE",
+  "FOR_EMAIL",
+];
 
 export const tabelasFdb = ["produtos", "clientes", "fornecedores"];
