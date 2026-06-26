@@ -8,7 +8,23 @@ export default defineNuxtConfig({
   app: {
     head: {
       bodyAttrs: {
-        style: "background-color: #BAE6FD;",
+        style: "background-color: #2F4F4F;",
+      },
+    },
+  },
+  vuetify: {
+    vuetifyOptions: {
+      theme: {
+        defaultTheme: "customTheme",
+        themes: {
+          customTheme: {
+            dark: true,
+            colors: {
+              primary: "#05ad70",
+              error: "#DCDCDC",
+            },
+          },
+        },
       },
     },
   },
