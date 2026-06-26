@@ -60,15 +60,21 @@ export const useApiFDB = () => {
     const blocos = chunkArray(payload, 200);
     try {
       let totalAtualizado = 0;
+      let chamadaApi = 1;
       for (const bloco of blocos) {
         const response = await $fetch<{ sucesso: string; total: number }>(
           `${ROUTES.apiFDB.atualizarRecurso}/${recurso}`,
           {
             method: "PATCH",
-            body: { payload: bloco.filter((b) => b), colunas },
+            body: {
+              payload: bloco.filter((b) => b),
+              colunas,
+              call: chamadaApi,
+            },
           },
         );
         totalAtualizado += response.total;
+        chamadaApi++;
       }
       $toast.success(`Total de ${totalAtualizado} ${alvo} atualizados!`);
       clearData();
@@ -91,6 +97,7 @@ export const useApiFDB = () => {
       const blocos = chunkArray(payload, 200);
 
       let totalAtualizado = 0;
+      let chamadaApi = 1;
       let deletarRecurso = deletar;
       for (const bloco of blocos) {
         const response = await $fetch<{ sucesso: string; total: number }>(
@@ -101,18 +108,19 @@ export const useApiFDB = () => {
               payload: bloco.filter((b) => b),
               colunas,
               deletar: deletarRecurso,
+              call: chamadaApi,
             },
           },
         );
         totalAtualizado += response.total;
-        if (deletar) {
-          deletarRecurso = false;
-        }
+        chamadaApi++;
+        if (deletar) deletarRecurso = false;
       }
       $toast.success(`Total de ${totalAtualizado} ${alvo} cadastrados!`);
       clearData();
     } catch (error: any) {
       $toast.error(error.data.message);
+      console.error("Contexto: ", error.data.context)
     } finally {
       loading.value = false;
     }

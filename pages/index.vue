@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid grid-list-xs class="pa-16 h-screen">
+  <v-container fluid grid-list-xs class="pa-16">
     <v-card class="text-center pa-4">
       <v-card-title primary-title> Auditor Fiscal </v-card-title>
       <v-card-text>
@@ -19,35 +19,18 @@
               fornecidos.
             </p>
           </v-card-text>
-          <v-btn
-            v-for="button in routesFiscal"
-            :key="button.name"
-            class="mx-4"
-            @click="goTo(button.link)"
-            :color="button.color"
-            :appendIcon="button.icon"
-            size="small"
-            >{{ button.name }}</v-btn
-          >
+          <v-btn v-for="button in routesFiscal" :key="button.name" class="mx-4" @click="goTo(button.link)"
+            :color="button.color" :appendIcon="button.icon" size="small">{{ button.name }}</v-btn>
         </div>
       </v-card-item>
 
       <v-card-item>
         <div class="text-h5">Automação para o Siafw</div>
         <v-card-text>
-          Cadastros e atualizações do banco de dados em lote</v-card-text
-        >
+          Cadastros e atualizações do banco de dados em lote</v-card-text>
         <div>
-          <v-btn
-            v-for="button in routesSiaf"
-            :key="button.name"
-            class="mx-4"
-            @click="goTo(button.link)"
-            :color="button.color"
-            :appendIcon="button.icon"
-            size="small"
-            >{{ button.name }}</v-btn
-          >
+          <v-btn v-for="button in routesSiaf" :key="button.name" class="mx-4" @click="goTo(button.link)"
+            :color="button.color" :appendIcon="button.icon" size="small">{{ button.name }}</v-btn>
         </div>
       </v-card-item>
     </v-card>

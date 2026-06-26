@@ -1,9 +1,6 @@
 <template>
   <div class="mx-8 my-4">
-    <Select
-      v-model="tabelaSelecionada"
-      :items="tabelasFdb"
-      label="Selecione o recurso" />
+    <Select v-model="tabelaSelecionada" :items="tabelasFdb" label="Selecione o recurso" />
   </div>
 
   <div class="mx-8 my-4" v-if="tabelaSelecionada">
