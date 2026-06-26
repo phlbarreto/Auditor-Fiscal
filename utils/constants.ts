@@ -1,6 +1,6 @@
 export const apiBase = "/api/v1";
 const apiFDBUrl = "http://localhost:2610";
-export const apiFdbCurrentVersion = "2.0.0";
+export const apiFdbCurrentVersion = "2.5.0";
 
 export const ROUTES = {
   api: {
@@ -164,6 +164,7 @@ export const colunasFornecedores = [
   "FOR_NOME",
   "FOR_RAZAO",
   "FOR_CPF",
+  "FOR_CGC",
   "FOR_BAI",
   "FOR_CID",
   "FOR_EST",
@@ -172,7 +173,7 @@ export const colunasFornecedores = [
   "FOR_FONE",
   "FOR_MAIL",
   "FOR_END",
-  "FOR_NUM",
+  "FOR_END_NUM",
 ];
 
 export const tabelasFdb = ["produtos", "clientes", "fornecedores"];
