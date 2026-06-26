@@ -1,10 +1,6 @@
 <template>
-  <div class="bg-sky-300 w-full h-10 elevation-2 flex justify-between">
-    <v-btn
-      @click="goTo('/')"
-      class="text-capitalize"
-      variant="plain"
-      :ripple="false">
+  <header class="bg-gray-800 text-white border-t border-gray-700 w-full h-12 elevation-2 flex justify-between">
+    <v-btn @click="goTo('/')" class="text-capitalize" variant="plain" :ripple="false">
       <span class="mx-2 font-bold">Auditor Fiscal</span>
     </v-btn>
 
@@ -13,20 +9,11 @@
       <div v-if="user">
         <v-menu open-on-hover>
           <template #activator="{ props }">
-            <v-btn
-              size="x-small"
-              class="mt-2 text-capitalize text-subtitle-1"
-              variant="plain"
-              v-bind="props"
-              >{{ user.name }}</v-btn
-            >
+            <v-btn size="x-small" class="mt-2 text-capitalize text-subtitle-1" variant="plain" v-bind="props">{{
+              user.name }}</v-btn>
           </template>
           <v-list>
-            <v-list-item
-              @click="item.action"
-              v-for="(item, index) in userMenu"
-              :key="index"
-              :append-icon="item.icon"
+            <v-list-item @click="item.action" v-for="(item, index) in userMenu" :key="index" :append-icon="item.icon"
               link>
               <v-list-item-title>{{ item.title }}</v-list-item-title>
             </v-list-item>
@@ -37,7 +24,7 @@
         <v-btn @click="goTo('/login')" variant="plain">Login</v-btn>
       </div>
     </div>
-  </div>
+  </header>
 </template>
 <script setup lang="ts">
   const userStore = useUserStore();
